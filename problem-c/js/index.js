@@ -27,24 +27,22 @@ function createTaskItemElement(object) {
   let toReturn = document.createElement('li');
   toReturn.textContent = object.description;
 
-  if (object.complete === true) {
+  if (object.complete) {
     toReturn.classList.add('font-strike');
+
   } 
 
   toReturn.addEventListener('click', function() {
-    if (object.complete === true) {
+    if (object.complete) {
       object.complete = false;
     } else {
       object.complete = true;
     }
-    toReturn.classList.toggle('font-strike');
     renderTaskList();
   });
 
   return toReturn;
 }
-
-console.log(createTaskItemElement(state.taskList[0]));
 
 //Finally, modify the `createTaskItemElement()` function so that each list item that 
 //is created is registered with a `'click'` event listener. This listener should 
@@ -65,9 +63,8 @@ console.log(createTaskItemElement(state.taskList[0]));
 function renderTaskList() {
   let list = document.querySelector("ol");
   list.innerHTML = "";
-
   for(let i = 0; i < state.taskList.length; i++) {
-    let item = document.createElement("li");
+    let item = createTaskItemElement(state.taskList[i]);
     item.textContent = state.taskList[i].description;
     list.appendChild(item);
   }
@@ -89,7 +86,7 @@ renderTaskList()
 //function; it should not interact directly with the DOM!
 
 function addNewTask() {
-  state.taskList.push({"id": state.taskList.length, "description" : state.inputtedText, "complete" : false});
+  state.taskList.push({"id": 1 + state.taskList.length, "description" : state.inputtedText, "complete" : false});
   state.inputtedText = "";
   renderTaskList();
 }
@@ -104,7 +101,7 @@ let inputs = document.querySelector("input");
 
 inputs.addEventListener("input", function () {
   state.inputtedText = inputs.value;
-  renderInput()
+  renderInput();
 })
 
 //Add an event listener to the "add task"`button` (check the HTML for its id!) 
@@ -133,10 +130,10 @@ function renderInput() {
   let input = document.querySelector("input");
   input.value = state.inputtedText;
   let button = document.querySelector("button");
-  if(state.inputtedText.length == 0) {
+  if(state.inputtedText == "") {
     button.disabled = true;
   } else {
-    button.disabled = false;
+    button.removeAttribute('disabled');
   }
 
 
